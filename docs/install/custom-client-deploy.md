@@ -191,6 +191,7 @@ Phase 6 internal onboarding web app (operator-only):
 - Script: `scripts/client-onboarding-web.mjs`
 - NPM command: `pnpm client:onboarding:web`
 - Default bind: `127.0.0.1:18797`
+- Optional API token guard: `OPENCLAW_ONBOARDING_WEB_TOKEN=<token>`
 
 Start the app:
 
@@ -201,6 +202,14 @@ pnpm client:onboarding:web
 Then open:
 
 - `http://127.0.0.1:18797/`
+
+Optional token-protected mode:
+
+```bash
+OPENCLAW_ONBOARDING_WEB_TOKEN=local-onboarding-token pnpm client:onboarding:web
+```
+
+When token mode is enabled, include the same token in the UI "API Token" field before submitting.
 
 Each submit writes payloads and regenerates:
 

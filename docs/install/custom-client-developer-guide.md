@@ -137,6 +137,12 @@ Start command:
 pnpm client:onboarding:web
 ```
 
+Optional token guard:
+
+```bash
+OPENCLAW_ONBOARDING_WEB_TOKEN=local-onboarding-token pnpm client:onboarding:web
+```
+
 Default URL:
 
 - `http://127.0.0.1:18797/`
@@ -144,12 +150,14 @@ Default URL:
 Endpoints:
 
 - `GET /` interactive form
+- `GET /api/bootstrap` catalog + presets for form hints
 - `POST /api/payload` payload write + import + mock env generation
 - `GET /healthz` health check
 
 Security posture:
 
 - binds to loopback by default for internal-only usage
+- supports optional API token guard via `OPENCLAW_ONBOARDING_WEB_TOKEN` (or `--token`)
 - accepts and stores secret references only (no real secret values)
 
 ## Command reference

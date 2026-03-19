@@ -8,14 +8,16 @@ import express from "express";
 
 const ROOT = process.cwd();
 const PAYLOAD_DIR = path.join(ROOT, "config", "payloads");
+const PRESETS_PATH = path.join(ROOT, "config", "templates", "client-presets.json");
+const CATALOG_PATH = path.join(ROOT, "config", "templates", "integration-catalog.json");
 const ENVIRONMENTS = new Set(["dev", "staging", "prod"]);
-const PRESETS = ["starter", "business-chat", "max-compat"];
 const CLIENT_ID_RE = /^[a-z][a-z0-9-]{1,62}$/;
 
 function parseArgs(argv) {
   const args = {
     host: "127.0.0.1",
     port: 18797,
+    token: process.env.OPENCLAW_ONBOARDING_WEB_TOKEN?.trim() || "",
   };
 
   for (let i = 0; i < argv.length; i += 1) {
@@ -30,6 +32,11 @@ function parseArgs(argv) {
       if (Number.isFinite(next) && next >= 1 && next <= 65535) {
         args.port = next;
       }
+      i += 1;
+      continue;
+    }
+    if (value === "--token") {
+      args.token = (argv[i + 1] ?? "").trim();
       i += 1;
       continue;
     }
@@ -52,7 +59,46 @@ function sortUnique(values) {
   return Array.from(new Set(values)).toSorted((a, b) => a.localeCompare(b));
 }
 
-function validateInput(input) {
+function normalizeCatalogEntries(entries) {
+  if (!Array.isArray(entries)) {
+    return [];
+  }
+  return entries
+    .map((entry) => {
+      if (typeof entry === "string") {
+        return entry;
+      }
+      if (entry && typeof entry === "object" && typeof entry.id === "string") {
+        return entry.id;
+      }
+      return "";
+    })
+    .filter((value) => value.length > 0);
+}
+
+function readJson(filePath) {
+  return JSON.parse(fs.readFileSync(filePath, "utf8"));
+}
+
+function loadBootstrapData() {
+  const presetsFile = fs.existsSync(PRESETS_PATH) ? readJson(PRESETS_PATH) : { presets: {} };
+  const catalogFile = fs.existsSync(CATALOG_PATH)
+    ? readJson(CATALOG_PATH)
+    : {
+        providers: [],
+        channels: [],
+        extensions: [],
+      };
+
+  return {
+    presetKeys: sortUnique(Object.keys(presetsFile.presets ?? {})),
+    providers: sortUnique(normalizeCatalogEntries(catalogFile.providers)),
+    channels: sortUnique(normalizeCatalogEntries(catalogFile.channels)),
+    extensions: sortUnique(normalizeCatalogEntries(catalogFile.extensions)),
+  };
+}
+
+function validateInput(input, bootstrap) {
   const errors = [];
   if (typeof input.clientId !== "string" || !CLIENT_ID_RE.test(input.clientId)) {
     errors.push("clientId must match ^[a-z][a-z0-9-]{1,62}$");
@@ -62,23 +108,29 @@ function validateInput(input) {
     errors.push("environment must be one of dev|staging|prod");
   }
 
-  if (input.preset && !PRESETS.includes(input.preset)) {
-    errors.push(`preset must be one of: ${PRESETS.join(", ")}`);
+  if (
+    typeof input.preset === "string" &&
+    input.preset.trim().length > 0 &&
+    !bootstrap.presetKeys.includes(input.preset.trim())
+  ) {
+    errors.push(`preset must be one of: ${bootstrap.presetKeys.join(", ")}`);
   }
 
   return errors;
 }
 
 function toPayload(input) {
+  const trimmedPreset = typeof input.preset === "string" ? input.preset.trim() : "";
+  const gatewayPort = typeof input.gatewayPort === "string" ? input.gatewayPort.trim() : "";
   return {
     schemaVersion: "v1",
     clientId: input.clientId,
     environment: input.environment,
-    ...(input.preset ? { preset: input.preset } : {}),
-    ...(input.gatewayPort
+    ...(trimmedPreset ? { preset: trimmedPreset } : {}),
+    ...(gatewayPort
       ? {
           deployment: {
-            gatewayPort: Number.parseInt(input.gatewayPort, 10),
+            gatewayPort: Number.parseInt(gatewayPort, 10),
           },
         }
       : {}),
@@ -137,6 +189,20 @@ function importPayloadAndGenerateMockEnv(payloadPath, clientId, environment) {
   return { importOutput, mockOutput, manifestPath };
 }
 
+function resolveRequestToken(req) {
+  const headerValue = req.get("authorization");
+  if (typeof headerValue === "string" && headerValue.toLowerCase().startsWith("bearer ")) {
+    return headerValue.slice(7).trim();
+  }
+
+  const explicit = req.get("x-onboarding-token");
+  if (typeof explicit === "string") {
+    return explicit.trim();
+  }
+
+  return "";
+}
+
 function htmlPage() {
   return `<!doctype html>
 <html lang="en">
@@ -153,6 +219,10 @@ function htmlPage() {
         --line: #d6dde5;
         --accent: #0f766e;
         --accent-ink: #ffffff;
+        --ok-bg: #e9f8ef;
+        --ok-ink: #0b6b2f;
+        --err-bg: #fdecec;
+        --err-ink: #8d1f1f;
       }
       body {
         margin: 0;
@@ -161,7 +231,7 @@ function htmlPage() {
         background: linear-gradient(160deg, #ecf2f6 0%, #f9fbfc 55%, #e9f6f4 100%);
       }
       main {
-        max-width: 860px;
+        max-width: 920px;
         margin: 2rem auto;
         padding: 1rem;
       }
@@ -182,6 +252,11 @@ function htmlPage() {
       .grid {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.75rem;
+      }
+      .grid-1 {
+        display: grid;
+        grid-template-columns: 1fr;
         gap: 0.75rem;
       }
       label {
@@ -212,13 +287,25 @@ function htmlPage() {
         font-weight: 700;
         cursor: pointer;
       }
+      .hint {
+        margin-top: 0.2rem;
+        color: var(--muted);
+        font-size: 0.82rem;
+      }
       #result {
         margin-top: 1rem;
         white-space: pre-wrap;
-        background: #f1f5f9;
         border: 1px solid var(--line);
         border-radius: 10px;
         padding: 0.75rem;
+      }
+      .ok {
+        background: var(--ok-bg);
+        color: var(--ok-ink);
+      }
+      .err {
+        background: var(--err-bg);
+        color: var(--err-ink);
       }
       @media (max-width: 760px) {
         .grid {
@@ -250,9 +337,6 @@ function htmlPage() {
               <label for="preset">Preset</label>
               <select id="preset" name="preset">
                 <option value="">(none)</option>
-                <option value="starter">starter</option>
-                <option value="business-chat">business-chat</option>
-                <option value="max-compat">max-compat</option>
               </select>
             </div>
             <div>
@@ -264,16 +348,19 @@ function htmlPage() {
             <div>
               <label for="providers">Providers (comma-separated)</label>
               <textarea id="providers" name="providers" placeholder="openai, anthropic"></textarea>
+              <div class="hint" id="providersHint"></div>
             </div>
             <div>
               <label for="channels">Channels (comma-separated)</label>
               <textarea id="channels" name="channels" placeholder="telegram, webchat"></textarea>
+              <div class="hint" id="channelsHint"></div>
             </div>
           </div>
           <div class="grid">
             <div>
               <label for="extensions">Extensions (comma-separated)</label>
               <textarea id="extensions" name="extensions" placeholder="matrix, msteams"></textarea>
+              <div class="hint" id="extensionsHint"></div>
             </div>
             <div>
               <label for="secretKeys">Extra Secret Keys (optional, comma-separated)</label>
@@ -290,6 +377,12 @@ function htmlPage() {
               <input id="ticket" name="ticket" placeholder="onboard-123" />
             </div>
           </div>
+          <div class="grid-1">
+            <div>
+              <label for="apiToken">API Token (optional if server token enabled)</label>
+              <input id="apiToken" name="apiToken" placeholder="onboarding token" />
+            </div>
+          </div>
           <p></p>
           <button type="submit">Generate Payload + Manifest + Mock Env</button>
         </form>
@@ -299,22 +392,80 @@ function htmlPage() {
     <script>
       const form = document.getElementById("f");
       const result = document.getElementById("result");
+      const presetEl = document.getElementById("preset");
+      const providersHint = document.getElementById("providersHint");
+      const channelsHint = document.getElementById("channelsHint");
+      const extensionsHint = document.getElementById("extensionsHint");
+
+      function topItems(values) {
+        return values.slice(0, 14).join(", ");
+      }
+
+      async function loadBootstrap() {
+        const response = await fetch("/api/bootstrap");
+        const data = await response.json();
+        if (!data.ok) {
+          throw new Error(data.error || "Failed to load bootstrap data");
+        }
+
+        for (const preset of data.presetKeys) {
+          const option = document.createElement("option");
+          option.value = preset;
+          option.textContent = preset;
+          presetEl.appendChild(option);
+        }
+
+        providersHint.textContent = data.providers.length
+          ? "Known providers: " + topItems(data.providers)
+          : "Known providers: none";
+        channelsHint.textContent = data.channels.length
+          ? "Known channels: " + topItems(data.channels)
+          : "Known channels: none";
+        extensionsHint.textContent = data.extensions.length
+          ? "Known extensions: " + topItems(data.extensions)
+          : "Known extensions: none";
+      }
+
+      function setResult(content, ok) {
+        result.textContent = content;
+        result.className = ok ? "ok" : "err";
+      }
+
       form.addEventListener("submit", async (event) => {
         event.preventDefault();
         const formData = new FormData(form);
         const payload = Object.fromEntries(formData.entries());
-        result.textContent = "Running...";
+        const token = typeof payload.apiToken === "string" ? payload.apiToken.trim() : "";
+        delete payload.apiToken;
+
+        setResult("Running...", true);
         try {
+          const headers = {
+            "content-type": "application/json",
+          };
+          if (token) {
+            headers["x-onboarding-token"] = token;
+          }
+
           const response = await fetch("/api/payload", {
             method: "POST",
-            headers: { "content-type": "application/json" },
+            headers,
             body: JSON.stringify(payload),
           });
+
           const data = await response.json();
-          result.textContent = JSON.stringify(data, null, 2);
+          if (!response.ok || !data.ok) {
+            setResult(JSON.stringify(data, null, 2), false);
+            return;
+          }
+          setResult(JSON.stringify(data, null, 2), true);
         } catch (error) {
-          result.textContent = String(error);
+          setResult(String(error), false);
         }
+      });
+
+      loadBootstrap().catch((error) => {
+        setResult(String(error), false);
       });
     </script>
   </body>
@@ -324,6 +475,7 @@ function htmlPage() {
 function main() {
   const args = parseArgs(process.argv.slice(2));
   const app = express();
+  const bootstrap = loadBootstrapData();
 
   app.use(express.json({ limit: "1mb" }));
 
@@ -335,10 +487,26 @@ function main() {
     res.type("html").send(htmlPage());
   });
 
+  app.get("/api/bootstrap", (_req, res) => {
+    res.json({
+      ok: true,
+      authRequired: args.token.length > 0,
+      ...bootstrap,
+    });
+  });
+
   app.post("/api/payload", (req, res) => {
     try {
+      if (args.token.length > 0) {
+        const incoming = resolveRequestToken(req);
+        if (incoming !== args.token) {
+          res.status(401).json({ ok: false, error: "Unauthorized (invalid onboarding token)." });
+          return;
+        }
+      }
+
       const input = req.body ?? {};
-      const errors = validateInput(input);
+      const errors = validateInput(input, bootstrap);
       if (errors.length > 0) {
         res.status(400).json({ ok: false, errors });
         return;
@@ -373,11 +541,16 @@ function main() {
 
   app.listen(args.port, args.host, () => {
     console.log(`Client onboarding web app listening on http://${args.host}:${args.port}`);
+    if (args.token.length > 0) {
+      console.log("Onboarding API token guard: enabled");
+    }
   });
 }
 
 if (process.argv.includes("--help") || process.argv.includes("-h")) {
-  console.log("Usage: node scripts/client-onboarding-web.mjs [--host 127.0.0.1] [--port 18797]");
+  console.log(
+    "Usage: node scripts/client-onboarding-web.mjs [--host 127.0.0.1] [--port 18797] [--token <value>]",
+  );
   process.exit(0);
 }
 
