@@ -217,6 +217,11 @@ Each submit writes payloads and regenerates:
 - `config/clients/<client>/<env>/manifest.json`
 - `config/clients/<client>/<env>/.env.mock.example`
 
+Preview mode before writing files:
+
+- Use the `Preview Manifest` button in the UI to call `POST /api/preview`
+- This validates inputs and shows the generated manifest without updating payload/manifests on disk
+
 Validation behavior for unknown integrations:
 
 - `dev`: unknown provider/channel/extension values warn

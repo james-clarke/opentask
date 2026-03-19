@@ -151,6 +151,7 @@ Endpoints:
 
 - `GET /` interactive form
 - `GET /api/bootstrap` catalog + presets for form hints
+- `POST /api/preview` manifest preview without writing payload/manifests
 - `POST /api/payload` payload write + import + mock env generation
 - `GET /healthz` health check
 
@@ -159,6 +160,12 @@ Security posture:
 - binds to loopback by default for internal-only usage
 - supports optional API token guard via `OPENCLAW_ONBOARDING_WEB_TOKEN` (or `--token`)
 - accepts and stores secret references only (no real secret values)
+
+UI behavior:
+
+- bootstrap endpoint populates known provider/channel/extension hints
+- preset selection supports one-click field population
+- preview mode shows resolved manifest output before file writes
 
 ## Command reference
 
