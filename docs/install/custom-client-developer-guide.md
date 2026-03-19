@@ -120,6 +120,38 @@ Key behavior:
 - Client state directories are deterministic under `~/.openclaw-clients/<client>/<env>/`
 - Secret values are resolved from process env first, then `--env-file`
 
+## Internal onboarding web app
+
+Internal app entrypoint:
+
+- `scripts/client-onboarding-web.mjs`
+
+Purpose:
+
+- operator-facing payload editor before a customer-facing portal
+- writes payload files and triggers manifest + mock env regeneration
+
+Start command:
+
+```bash
+pnpm client:onboarding:web
+```
+
+Default URL:
+
+- `http://127.0.0.1:18797/`
+
+Endpoints:
+
+- `GET /` interactive form
+- `POST /api/payload` payload write + import + mock env generation
+- `GET /healthz` health check
+
+Security posture:
+
+- binds to loopback by default for internal-only usage
+- accepts and stores secret references only (no real secret values)
+
 ## Command reference
 
 Catalog and contract checks:

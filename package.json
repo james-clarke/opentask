@@ -545,6 +545,7 @@
     "client:deploy": "node scripts/client-deploy.mjs --apply",
     "client:deploy:dry-run": "node scripts/client-deploy.mjs --dry-run",
     "client:mock-env": "node scripts/generate-client-mock-env.mjs",
+    "client:onboarding:web": "node scripts/client-onboarding-web.mjs",
     "client:payload:import": "node scripts/import-client-payload.mjs",
     "client:validate": "node scripts/validate-client-manifest.mjs --dir config/clients",
     "client:validate:strict": "node scripts/validate-client-manifest.mjs --dir config/clients --fail-on-warnings",

@@ -4,7 +4,8 @@
   "environment": "dev",
   "preset": "starter",
   "integrations": {
-    "channels": ["telegram"],
+    "providers": ["anthropic", "openai"],
+    "channels": ["telegram", "webchat"],
     "extensions": ["discord"]
   },
   "metadata": {

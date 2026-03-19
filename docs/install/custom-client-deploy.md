@@ -186,6 +186,28 @@ If secret refs are not already exported in shell env, provide an env file:
 node scripts/client-deploy.mjs --client example --env staging --env-file config/clients/example/staging/.env.mock.example --dry-run
 ```
 
+Phase 6 internal onboarding web app (operator-only):
+
+- Script: `scripts/client-onboarding-web.mjs`
+- NPM command: `pnpm client:onboarding:web`
+- Default bind: `127.0.0.1:18797`
+
+Start the app:
+
+```bash
+pnpm client:onboarding:web
+```
+
+Then open:
+
+- `http://127.0.0.1:18797/`
+
+Each submit writes payloads and regenerates:
+
+- `config/payloads/<client>/<env>.json`
+- `config/clients/<client>/<env>/manifest.json`
+- `config/clients/<client>/<env>/.env.mock.example`
+
 Validation behavior for unknown integrations:
 
 - `dev`: unknown provider/channel/extension values warn
