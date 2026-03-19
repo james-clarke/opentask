@@ -1,0 +1,701 @@
+{
+  "schemaVersion": "v1",
+  "providers": [
+    {
+      "id": "acpx",
+      "source": "extension"
+    },
+    {
+      "id": "amazon-bedrock",
+      "source": "extension"
+    },
+    {
+      "id": "anthropic",
+      "source": "core"
+    },
+    {
+      "id": "bluebubbles",
+      "source": "extension"
+    },
+    {
+      "id": "brave",
+      "source": "extension"
+    },
+    {
+      "id": "byteplus",
+      "source": "extension"
+    },
+    {
+      "id": "chutes",
+      "source": "extension"
+    },
+    {
+      "id": "cloudflare-ai-gateway",
+      "source": "core"
+    },
+    {
+      "id": "copilot-proxy",
+      "source": "extension"
+    },
+    {
+      "id": "device-pair",
+      "source": "extension"
+    },
+    {
+      "id": "diagnostics-otel",
+      "source": "extension"
+    },
+    {
+      "id": "diffs",
+      "source": "extension"
+    },
+    {
+      "id": "discord",
+      "source": "extension"
+    },
+    {
+      "id": "elevenlabs",
+      "source": "extension"
+    },
+    {
+      "id": "fal",
+      "source": "extension"
+    },
+    {
+      "id": "feishu",
+      "source": "extension"
+    },
+    {
+      "id": "firecrawl",
+      "source": "extension"
+    },
+    {
+      "id": "gemini",
+      "source": "core"
+    },
+    {
+      "id": "github-copilot",
+      "source": "extension"
+    },
+    {
+      "id": "google",
+      "source": "extension"
+    },
+    {
+      "id": "googlechat",
+      "source": "extension"
+    },
+    {
+      "id": "huggingface",
+      "source": "extension"
+    },
+    {
+      "id": "imessage",
+      "source": "extension"
+    },
+    {
+      "id": "irc",
+      "source": "extension"
+    },
+    {
+      "id": "kilocode",
+      "source": "extension"
+    },
+    {
+      "id": "kimi-coding",
+      "source": "extension"
+    },
+    {
+      "id": "line",
+      "source": "extension"
+    },
+    {
+      "id": "llm-task",
+      "source": "extension"
+    },
+    {
+      "id": "lobster",
+      "source": "extension"
+    },
+    {
+      "id": "matrix",
+      "source": "extension"
+    },
+    {
+      "id": "mattermost",
+      "source": "extension"
+    },
+    {
+      "id": "memory-core",
+      "source": "extension"
+    },
+    {
+      "id": "memory-lancedb",
+      "source": "extension"
+    },
+    {
+      "id": "microsoft",
+      "source": "extension"
+    },
+    {
+      "id": "minimax",
+      "source": "core"
+    },
+    {
+      "id": "mistral",
+      "source": "core"
+    },
+    {
+      "id": "modelstudio",
+      "source": "extension"
+    },
+    {
+      "id": "moonshot",
+      "source": "core"
+    },
+    {
+      "id": "msteams",
+      "source": "extension"
+    },
+    {
+      "id": "nextcloud-talk",
+      "source": "extension"
+    },
+    {
+      "id": "nostr",
+      "source": "extension"
+    },
+    {
+      "id": "nvidia",
+      "source": "extension"
+    },
+    {
+      "id": "ollama",
+      "source": "core"
+    },
+    {
+      "id": "open-prose",
+      "source": "extension"
+    },
+    {
+      "id": "openai",
+      "source": "core"
+    },
+    {
+      "id": "opencode",
+      "source": "extension"
+    },
+    {
+      "id": "opencode-go",
+      "source": "extension"
+    },
+    {
+      "id": "openrouter",
+      "source": "core"
+    },
+    {
+      "id": "openshell",
+      "source": "extension"
+    },
+    {
+      "id": "perplexity",
+      "source": "extension"
+    },
+    {
+      "id": "phone-control",
+      "source": "extension"
+    },
+    {
+      "id": "qianfan",
+      "source": "extension"
+    },
+    {
+      "id": "qwen-portal-auth",
+      "source": "extension"
+    },
+    {
+      "id": "sglang",
+      "source": "extension"
+    },
+    {
+      "id": "shared",
+      "source": "extension"
+    },
+    {
+      "id": "signal",
+      "source": "extension"
+    },
+    {
+      "id": "slack",
+      "source": "extension"
+    },
+    {
+      "id": "synology-chat",
+      "source": "extension"
+    },
+    {
+      "id": "synthetic",
+      "source": "core"
+    },
+    {
+      "id": "talk-voice",
+      "source": "extension"
+    },
+    {
+      "id": "telegram",
+      "source": "extension"
+    },
+    {
+      "id": "thread-ownership",
+      "source": "extension"
+    },
+    {
+      "id": "tlon",
+      "source": "extension"
+    },
+    {
+      "id": "together",
+      "source": "extension"
+    },
+    {
+      "id": "twitch",
+      "source": "extension"
+    },
+    {
+      "id": "venice",
+      "source": "extension"
+    },
+    {
+      "id": "vercel-ai-gateway",
+      "source": "core"
+    },
+    {
+      "id": "vllm",
+      "source": "extension"
+    },
+    {
+      "id": "voice-call",
+      "source": "extension"
+    },
+    {
+      "id": "volcengine",
+      "source": "extension"
+    },
+    {
+      "id": "whatsapp",
+      "source": "extension"
+    },
+    {
+      "id": "xai",
+      "source": "core"
+    },
+    {
+      "id": "xiaomi",
+      "source": "extension"
+    },
+    {
+      "id": "zai",
+      "source": "core"
+    },
+    {
+      "id": "zalo",
+      "source": "extension"
+    },
+    {
+      "id": "zalouser",
+      "source": "extension"
+    }
+  ],
+  "channels": [
+    {
+      "id": "bluebubbles",
+      "source": "core"
+    },
+    {
+      "id": "discord",
+      "source": "core"
+    },
+    {
+      "id": "feishu",
+      "source": "extension"
+    },
+    {
+      "id": "googlechat",
+      "source": "core"
+    },
+    {
+      "id": "imessage",
+      "source": "core"
+    },
+    {
+      "id": "irc",
+      "source": "core"
+    },
+    {
+      "id": "line",
+      "source": "core"
+    },
+    {
+      "id": "matrix",
+      "source": "extension"
+    },
+    {
+      "id": "mattermost",
+      "source": "core"
+    },
+    {
+      "id": "msteams",
+      "source": "core"
+    },
+    {
+      "id": "nextcloud-talk",
+      "source": "core"
+    },
+    {
+      "id": "nostr",
+      "source": "core"
+    },
+    {
+      "id": "signal",
+      "source": "core"
+    },
+    {
+      "id": "slack",
+      "source": "core"
+    },
+    {
+      "id": "synology-chat",
+      "source": "core"
+    },
+    {
+      "id": "telegram",
+      "source": "core"
+    },
+    {
+      "id": "tlon",
+      "source": "core"
+    },
+    {
+      "id": "twitch",
+      "source": "core"
+    },
+    {
+      "id": "webchat",
+      "source": "core"
+    },
+    {
+      "id": "whatsapp",
+      "source": "core"
+    },
+    {
+      "id": "zalo",
+      "source": "core"
+    },
+    {
+      "id": "zalouser",
+      "source": "core"
+    }
+  ],
+  "extensions": [
+    {
+      "id": "acpx",
+      "source": "extension"
+    },
+    {
+      "id": "amazon-bedrock",
+      "source": "extension"
+    },
+    {
+      "id": "anthropic",
+      "source": "extension"
+    },
+    {
+      "id": "bluebubbles",
+      "source": "extension"
+    },
+    {
+      "id": "brave",
+      "source": "extension"
+    },
+    {
+      "id": "byteplus",
+      "source": "extension"
+    },
+    {
+      "id": "chutes",
+      "source": "extension"
+    },
+    {
+      "id": "cloudflare-ai-gateway",
+      "source": "extension"
+    },
+    {
+      "id": "copilot-proxy",
+      "source": "extension"
+    },
+    {
+      "id": "device-pair",
+      "source": "extension"
+    },
+    {
+      "id": "diagnostics-otel",
+      "source": "extension"
+    },
+    {
+      "id": "diffs",
+      "source": "extension"
+    },
+    {
+      "id": "discord",
+      "source": "extension"
+    },
+    {
+      "id": "elevenlabs",
+      "source": "extension"
+    },
+    {
+      "id": "fal",
+      "source": "extension"
+    },
+    {
+      "id": "feishu",
+      "source": "extension"
+    },
+    {
+      "id": "firecrawl",
+      "source": "extension"
+    },
+    {
+      "id": "github-copilot",
+      "source": "extension"
+    },
+    {
+      "id": "google",
+      "source": "extension"
+    },
+    {
+      "id": "googlechat",
+      "source": "extension"
+    },
+    {
+      "id": "huggingface",
+      "source": "extension"
+    },
+    {
+      "id": "imessage",
+      "source": "extension"
+    },
+    {
+      "id": "irc",
+      "source": "extension"
+    },
+    {
+      "id": "kilocode",
+      "source": "extension"
+    },
+    {
+      "id": "kimi-coding",
+      "source": "extension"
+    },
+    {
+      "id": "line",
+      "source": "extension"
+    },
+    {
+      "id": "llm-task",
+      "source": "extension"
+    },
+    {
+      "id": "lobster",
+      "source": "extension"
+    },
+    {
+      "id": "matrix",
+      "source": "extension"
+    },
+    {
+      "id": "mattermost",
+      "source": "extension"
+    },
+    {
+      "id": "memory-core",
+      "source": "extension"
+    },
+    {
+      "id": "memory-lancedb",
+      "source": "extension"
+    },
+    {
+      "id": "microsoft",
+      "source": "extension"
+    },
+    {
+      "id": "minimax",
+      "source": "extension"
+    },
+    {
+      "id": "mistral",
+      "source": "extension"
+    },
+    {
+      "id": "modelstudio",
+      "source": "extension"
+    },
+    {
+      "id": "moonshot",
+      "source": "extension"
+    },
+    {
+      "id": "msteams",
+      "source": "extension"
+    },
+    {
+      "id": "nextcloud-talk",
+      "source": "extension"
+    },
+    {
+      "id": "nostr",
+      "source": "extension"
+    },
+    {
+      "id": "nvidia",
+      "source": "extension"
+    },
+    {
+      "id": "ollama",
+      "source": "extension"
+    },
+    {
+      "id": "open-prose",
+      "source": "extension"
+    },
+    {
+      "id": "openai",
+      "source": "extension"
+    },
+    {
+      "id": "opencode",
+      "source": "extension"
+    },
+    {
+      "id": "opencode-go",
+      "source": "extension"
+    },
+    {
+      "id": "openrouter",
+      "source": "extension"
+    },
+    {
+      "id": "openshell",
+      "source": "extension"
+    },
+    {
+      "id": "perplexity",
+      "source": "extension"
+    },
+    {
+      "id": "phone-control",
+      "source": "extension"
+    },
+    {
+      "id": "qianfan",
+      "source": "extension"
+    },
+    {
+      "id": "qwen-portal-auth",
+      "source": "extension"
+    },
+    {
+      "id": "sglang",
+      "source": "extension"
+    },
+    {
+      "id": "shared",
+      "source": "extension"
+    },
+    {
+      "id": "signal",
+      "source": "extension"
+    },
+    {
+      "id": "slack",
+      "source": "extension"
+    },
+    {
+      "id": "synology-chat",
+      "source": "extension"
+    },
+    {
+      "id": "synthetic",
+      "source": "extension"
+    },
+    {
+      "id": "talk-voice",
+      "source": "extension"
+    },
+    {
+      "id": "telegram",
+      "source": "extension"
+    },
+    {
+      "id": "thread-ownership",
+      "source": "extension"
+    },
+    {
+      "id": "tlon",
+      "source": "extension"
+    },
+    {
+      "id": "together",
+      "source": "extension"
+    },
+    {
+      "id": "twitch",
+      "source": "extension"
+    },
+    {
+      "id": "venice",
+      "source": "extension"
+    },
+    {
+      "id": "vercel-ai-gateway",
+      "source": "extension"
+    },
+    {
+      "id": "vllm",
+      "source": "extension"
+    },
+    {
+      "id": "voice-call",
+      "source": "extension"
+    },
+    {
+      "id": "volcengine",
+      "source": "extension"
+    },
+    {
+      "id": "whatsapp",
+      "source": "extension"
+    },
+    {
+      "id": "xai",
+      "source": "extension"
+    },
+    {
+      "id": "xiaomi",
+      "source": "extension"
+    },
+    {
+      "id": "zai",
+      "source": "extension"
+    },
+    {
+      "id": "zalo",
+      "source": "extension"
+    },
+    {
+      "id": "zalouser",
+      "source": "extension"
+    }
+  ]
+}

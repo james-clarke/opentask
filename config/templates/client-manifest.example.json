@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "v1",
+  "clientId": "acme",
+  "environment": "dev",
+  "deployment": {
+    "gatewayPort": 18789,
+    "gatewayBind": "loopback",
+    "gatewayAuthMode": "token"
+  },
+  "integrations": {
+    "providers": ["anthropic", "openai"],
+    "channels": ["discord", "telegram", "webchat"],
+    "extensions": ["matrix", "msteams", "zalo"]
+  },
+  "secretRefs": {
+    "OPENAI_API_KEY": "OPENAI_API_KEY_ACME_DEV",
+    "ANTHROPIC_API_KEY": "ANTHROPIC_API_KEY_ACME_DEV",
+    "OPENCLAW_GATEWAY_TOKEN": "OPENCLAW_GATEWAY_TOKEN_ACME_DEV"
+  },
+  "metadata": {
+    "owner": "platform-team",
+    "region": "us-east"
+  }
+}

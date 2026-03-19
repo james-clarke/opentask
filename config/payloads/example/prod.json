@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "v1",
+  "clientId": "example",
+  "environment": "prod",
+  "preset": "business-chat",
+  "deployment": {
+    "gatewayPort": 18790
+  },
+  "integrations": {
+    "channels": ["line"],
+    "extensions": ["msteams"]
+  },
+  "metadata": {
+    "owner": "platform-team",
+    "ticket": "demo-prod"
+  }
+}

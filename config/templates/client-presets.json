@@ -1,0 +1,83 @@
+{
+  "schemaVersion": "v1",
+  "presets": {
+    "starter": {
+      "description": "Minimal setup for non-power-users getting started quickly.",
+      "integrations": {
+        "providers": ["anthropic", "openai"],
+        "channels": ["webchat"],
+        "extensions": []
+      },
+      "deployment": {
+        "gatewayBind": "loopback",
+        "gatewayAuthMode": "token",
+        "gatewayPort": 18789
+      }
+    },
+    "business-chat": {
+      "description": "Customer support and team chat channels with low-ops defaults.",
+      "integrations": {
+        "providers": ["anthropic", "openai", "openrouter"],
+        "channels": ["discord", "slack", "telegram", "webchat", "whatsapp"],
+        "extensions": ["matrix", "msteams"]
+      },
+      "deployment": {
+        "gatewayBind": "loopback",
+        "gatewayAuthMode": "token",
+        "gatewayPort": 18789
+      }
+    },
+    "max-compat": {
+      "description": "Broad integration coverage for operators who want high channel/provider flexibility.",
+      "integrations": {
+        "providers": [
+          "anthropic",
+          "cloudflare-ai-gateway",
+          "gemini",
+          "minimax",
+          "mistral",
+          "moonshot",
+          "ollama",
+          "openai",
+          "openrouter",
+          "synthetic",
+          "vercel-ai-gateway",
+          "xai",
+          "zai"
+        ],
+        "channels": [
+          "bluebubbles",
+          "discord",
+          "googlechat",
+          "imessage",
+          "line",
+          "mattermost",
+          "msteams",
+          "signal",
+          "slack",
+          "telegram",
+          "webchat",
+          "whatsapp",
+          "zalo",
+          "zalouser"
+        ],
+        "extensions": [
+          "matrix",
+          "msteams",
+          "nextcloud-talk",
+          "nostr",
+          "synology-chat",
+          "tlon",
+          "twitch",
+          "zalo",
+          "zalouser"
+        ]
+      },
+      "deployment": {
+        "gatewayBind": "loopback",
+        "gatewayAuthMode": "token",
+        "gatewayPort": 18789
+      }
+    }
+  }
+}

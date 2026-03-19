@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openclaw.ai/schemas/client-manifest.schema.json",
+  "title": "OpenClaw Client Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "clientId",
+    "environment",
+    "deployment",
+    "integrations",
+    "secretRefs"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "v1"
+    },
+    "clientId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{1,62}$"
+    },
+    "environment": {
+      "type": "string",
+      "enum": ["dev", "staging", "prod"]
+    },
+    "deployment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["gatewayPort", "gatewayBind", "gatewayAuthMode"],
+      "properties": {
+        "gatewayPort": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 65535,
+          "default": 18789
+        },
+        "gatewayBind": {
+          "type": "string",
+          "enum": ["loopback", "all"],
+          "default": "loopback"
+        },
+        "gatewayAuthMode": {
+          "type": "string",
+          "enum": ["token", "password"],
+          "default": "token"
+        }
+      }
+    },
+    "integrations": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["providers", "channels", "extensions"],
+      "properties": {
+        "providers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{1,62}$"
+          },
+          "uniqueItems": true
+        },
+        "channels": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{1,62}$"
+          },
+          "uniqueItems": true
+        },
+        "extensions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{1,62}$"
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "secretRefs": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "pattern": "^[A-Z][A-Z0-9_]{2,127}$"
+      },
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^[A-Z][A-Z0-9_]{2,127}$"
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    }
+  }
+}

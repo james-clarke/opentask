@@ -150,6 +150,19 @@ Deploy OpenClaw on a cloud server or VPS:
   <Card title="Northflank" href="/install/northflank">Northflank</Card>
 </CardGroup>
 
+## Fork operators
+
+If you maintain a client-deployment fork and need an upstream-friendly workflow:
+
+<CardGroup cols={2}>
+  <Card title="Custom Client Deploy" href="/install/custom-client-deploy">
+    Fork-safe deployment + onboarding workflow for multiple clients.
+  </Card>
+  <Card title="Custom Client Developer Guide" href="/install/custom-client-developer-guide">
+    Detailed maintainer workflow for payloads, manifests, deploy planning, and CI gates.
+  </Card>
+</CardGroup>
+
 ## Update, migrate, or uninstall
 
 <CardGroup cols={3}>
