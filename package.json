@@ -549,6 +549,7 @@
     "client:payload:import": "node scripts/import-client-payload.mjs",
     "client:validate": "node scripts/validate-client-manifest.mjs --dir config/clients",
     "client:validate:strict": "node scripts/validate-client-manifest.mjs --dir config/clients --fail-on-warnings",
+    "client:verify": "node scripts/client-verify.mjs",
     "config:docs:check": "node --import tsx scripts/generate-config-doc-baseline.ts --check",
     "config:docs:gen": "node --import tsx scripts/generate-config-doc-baseline.ts --write",
     "deadcode:ci": "pnpm deadcode:report:ci:knip",

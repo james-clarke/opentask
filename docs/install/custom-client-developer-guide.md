@@ -120,6 +120,31 @@ Key behavior:
 - Client state directories are deterministic under `~/.openclaw-clients/<client>/<env>/`
 - Secret values are resolved from process env first, then `--env-file`
 
+## Verification checks (Phase 7)
+
+Verification script:
+
+- `scripts/client-verify.mjs`
+
+What it verifies:
+
+- required secret refs are resolvable from process env or `--env-file`
+- provider-to-secret mapping coverage for known providers
+- optional local gateway health probe (`--check-gateway`)
+
+Key commands:
+
+```bash
+pnpm client:verify -- --client example --env dev --env-file config/clients/example/dev/.env.mock.example
+pnpm client:verify -- --client example --env dev --env-file config/clients/example/dev/.env.mock.example --check-gateway
+```
+
+Strict mode fails on warnings:
+
+```bash
+pnpm client:verify -- --client example --env dev --env-file config/clients/example/dev/.env.mock.example --strict
+```
+
 ## Internal onboarding web app
 
 Internal app entrypoint:
@@ -196,6 +221,7 @@ Makefile wrappers:
 ```bash
 make deploy-dry-run CLIENT=example ENV=dev ENV_FILE=config/clients/example/dev/.env.mock.example
 make deploy CLIENT=example ENV=dev ENV_FILE=config/clients/example/dev/.env.mock.example
+make client-verify CLIENT=example ENV=dev ENV_FILE=config/clients/example/dev/.env.mock.example
 ```
 
 ## CI workflow
@@ -235,3 +261,4 @@ If CI fails, use the exact failing command locally and fix from top to bottom.
 - Run `pnpm client:check` after each upstream rebase to catch drift early.
 
 For operator setup and deployment intent, see [Custom Client Deploy](/install/custom-client-deploy).
+For next milestones and backlog sequencing, see [Custom Client Phase Roadmap](/install/custom-client-phase-roadmap).

@@ -154,12 +154,15 @@ Deploy OpenClaw on a cloud server or VPS:
 
 If you maintain a client-deployment fork and need an upstream-friendly workflow:
 
-<CardGroup cols={2}>
+<CardGroup cols={3}>
   <Card title="Custom Client Deploy" href="/install/custom-client-deploy">
     Fork-safe deployment + onboarding workflow for multiple clients.
   </Card>
   <Card title="Custom Client Developer Guide" href="/install/custom-client-developer-guide">
     Detailed maintainer workflow for payloads, manifests, deploy planning, and CI gates.
+  </Card>
+  <Card title="Custom Client Phase Roadmap" href="/install/custom-client-phase-roadmap">
+    Execution-order roadmap for onboarding automation, verification, and productization.
   </Card>
 </CardGroup>
 

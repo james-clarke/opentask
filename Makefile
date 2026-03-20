@@ -6,7 +6,7 @@ PAYLOAD ?=config/payloads
 MANIFEST ?=
 ENV_FILE ?=
 
-.PHONY: client-catalog client-catalog-check client-validate client-validate-strict client-import client-mock-env deploy-dry-run deploy
+.PHONY: client-catalog client-catalog-check client-validate client-validate-strict client-import client-mock-env client-verify deploy-dry-run deploy
 
 define require_client_env
 	@if [[ -z "$(CLIENT)" || -z "$(ENV)" ]]; then \
@@ -36,6 +36,14 @@ client-mock-env:
 		exit 1; \
 	fi
 	pnpm client:mock-env -- --manifest "$(MANIFEST)"
+
+client-verify:
+	$(require_client_env)
+	@if [[ -n "$(ENV_FILE)" ]]; then \
+		pnpm client:verify -- --client "$(CLIENT)" --env "$(ENV)" --env-file "$(ENV_FILE)"; \
+	else \
+		pnpm client:verify -- --client "$(CLIENT)" --env "$(ENV)"; \
+	fi
 
 deploy-dry-run:
 	$(require_client_env)

@@ -16,6 +16,7 @@ It prioritizes two goals:
 2. make client onboarding/deploy flows deterministic before a full portal exists
 
 For detailed maintainer internals (payload contract, scripts, CI, and troubleshooting), see [Custom Client Developer Guide](/install/custom-client-developer-guide).
+For the execution-order backlog, see [Custom Client Phase Roadmap](/install/custom-client-phase-roadmap).
 
 ## Keep fork divergence small
 
@@ -221,6 +222,19 @@ Preview mode before writing files:
 
 - Use the `Preview Manifest` button in the UI to call `POST /api/preview`
 - This validates inputs and shows the generated manifest without updating payload/manifests on disk
+
+Phase 7 verification command:
+
+- Script: `scripts/client-verify.mjs`
+- NPM command: `pnpm client:verify -- --client <id> --env <env>`
+- Makefile command: `make client-verify CLIENT=<id> ENV=<env>`
+
+Verify with env refs + optional local gateway health probe:
+
+```bash
+pnpm client:verify -- --client example --env dev --env-file config/clients/example/dev/.env.mock.example
+pnpm client:verify -- --client example --env dev --env-file config/clients/example/dev/.env.mock.example --check-gateway
+```
 
 Validation behavior for unknown integrations:
 
