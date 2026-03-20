@@ -19,6 +19,8 @@ This roadmap prioritizes a customer-friendly onboarding experience while keeping
 4. Deploy dry-run/apply flow
 5. Contract CI gate
 6. Internal onboarding web app
+7. Verification command + operator checks
+8. Local simulation workflow
 
 ## Phase 7 (now): verification-first onboarding automation
 
@@ -39,7 +41,7 @@ Validation strategy:
 - local verify checks: `pnpm client:verify -- --client <id> --env <env> --env-file <path>`
 - optional gateway probe when a local stack is already running: `--check-gateway`
 
-## Phase 8: staged simulation and teardown workflow
+## Phase 8 (now): staged simulation and teardown workflow
 
 Primary objective:
 
@@ -48,13 +50,40 @@ Primary objective:
 Backlog:
 
 1. Add `client:simulate` command:
-   - apply deploy
-   - run verify
-   - optional teardown
+   - quick profile: deploy dry-run + verify
+   - full profile: deploy apply + verify + optional teardown
 2. Add profile-based simulation presets (`quick`, `full`)
 3. Add report output (JSON + plain text summary)
 
-## Phase 9: model and channel connection probes
+Current command examples:
+
+```bash
+pnpm client:simulate -- --client example --env dev --profile quick --env-file config/clients/example/dev/.env.mock.example
+pnpm client:simulate -- --client example --env dev --profile full --env-file config/clients/example/dev/.env.mock.example --teardown
+```
+
+## Phase 9 (now): local onboarding E2E workflow
+
+Primary objective:
+
+- provide one command that checks host dependencies, optionally rebuilds Docker, runs full simulation, and tears down by default
+
+Backlog:
+
+1. Add `client:onboarding:local-e2e` command
+2. Add host dependency preflight command (`client:host:check`)
+3. Make rebuild opt-in only (`--rebuild`)
+4. Keep teardown as default behavior (opt out with `--keep-running`)
+
+Current command examples:
+
+```bash
+pnpm client:host:check
+pnpm client:onboarding:local-e2e -- --client example --env dev --env-file config/clients/example/dev/.env.mock.example
+pnpm client:onboarding:local-e2e -- --client example --env dev --env-file config/clients/example/dev/.env.mock.example --rebuild --keep-running
+```
+
+## Phase 10: model and channel connection probes
 
 Primary objective:
 
@@ -66,7 +95,7 @@ Backlog:
 2. Add channel readiness checks (configured vs reachable/authenticated)
 3. Publish pass/fail matrix in verification output
 
-## Phase 10: customer-facing onboarding surface
+## Phase 11: customer-facing onboarding surface
 
 Primary objective:
 
@@ -78,7 +107,7 @@ Backlog:
 2. Expose a constrained onboarding form using presets and guided defaults
 3. Keep internals private (manifests, secret refs, deploy internals)
 
-## Phase 11: productized skills/actions/commands
+## Phase 12: productized skills/actions/commands
 
 Primary objective:
 

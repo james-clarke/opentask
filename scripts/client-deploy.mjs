@@ -272,6 +272,7 @@ function runApply(plan) {
 
   fs.mkdirSync(plan.runtimeEnv.OPENCLAW_CONFIG_DIR, { recursive: true });
   fs.mkdirSync(plan.runtimeEnv.OPENCLAW_WORKSPACE_DIR, { recursive: true });
+  ensureGatewayBootstrapConfig(plan);
 
   const child = spawnSync(plan.commandPreview[0], plan.commandPreview.slice(1), {
     cwd: ROOT,
@@ -285,6 +286,32 @@ function runApply(plan) {
   if (child.status !== 0) {
     throw new Error(`docker compose exited with status ${child.status ?? 1}`);
   }
+}
+
+function ensureGatewayBootstrapConfig(plan) {
+  const configPath = path.join(plan.runtimeEnv.OPENCLAW_CONFIG_DIR, "openclaw.json");
+  let config = {};
+
+  if (fs.existsSync(configPath)) {
+    try {
+      const parsed = JSON.parse(fs.readFileSync(configPath, "utf8"));
+      if (parsed && typeof parsed === "object") {
+        config = parsed;
+      }
+    } catch {
+      // If the file is invalid JSON, recreate a safe minimal config.
+      config = {};
+    }
+  }
+
+  const currentGateway = config.gateway && typeof config.gateway === "object" ? config.gateway : {};
+  config.gateway = {
+    ...currentGateway,
+    mode: "local",
+    bind: plan.runtimeEnv.OPENCLAW_GATEWAY_BIND,
+  };
+
+  fs.writeFileSync(configPath, `${JSON.stringify(config, null, 2)}\n`, "utf8");
 }
 
 function printUsage() {

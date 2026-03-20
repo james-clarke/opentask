@@ -236,6 +236,56 @@ pnpm client:verify -- --client example --env dev --env-file config/clients/examp
 pnpm client:verify -- --client example --env dev --env-file config/clients/example/dev/.env.mock.example --check-gateway
 ```
 
+Phase 8 local simulation (no new server per run):
+
+- Script: `scripts/client-simulate.mjs`
+- NPM command: `pnpm client:simulate -- --client <id> --env <env> --profile quick|full`
+- Makefile command: `make client-simulate CLIENT=<id> ENV=<env> PROFILE=quick|full [ENV_FILE=...] [TEARDOWN=1]`
+
+Quick simulation (dry-run deploy + verify):
+
+```bash
+make client-simulate CLIENT=example ENV=dev PROFILE=quick ENV_FILE=config/clients/example/dev/.env.mock.example
+```
+
+Full simulation (apply + verify + optional teardown):
+
+```bash
+make client-simulate CLIENT=example ENV=dev PROFILE=full ENV_FILE=config/clients/example/dev/.env.mock.example TEARDOWN=1
+```
+
+Local onboarding E2E (web input -> build/run/verify):
+
+- Script: `scripts/client-onboarding-local-e2e.mjs`
+- NPM command: `pnpm client:onboarding:local-e2e -- --client <id> --env <env>`
+- Makefile command: `make client-local-e2e CLIENT=<id> ENV=<env> [ENV_FILE=...] [REBUILD=1] [KEEP_RUNNING=1]`
+
+Defaults:
+
+- no rebuild unless `--rebuild` (or `REBUILD=1`)
+- teardown enabled by default (pass `--keep-running` or `KEEP_RUNNING=1` to keep stack up)
+
+Examples:
+
+```bash
+make client-local-e2e CLIENT=example ENV=dev ENV_FILE=config/clients/example/dev/.env.mock.example
+make client-local-e2e CLIENT=example ENV=dev ENV_FILE=config/clients/example/dev/.env.mock.example REBUILD=1 KEEP_RUNNING=1
+```
+
+Host dependency preflight (blank machine/VPS friendly):
+
+```bash
+pnpm client:host:check
+```
+
+If Docker, Compose, or daemon access is missing, fix host setup first and rerun this check. For full Docker setup flow, use `./docker-setup.sh` and see [Docker](/install/docker).
+
+If `openclaw:local` has not been built yet, run local E2E once with rebuild:
+
+```bash
+pnpm client:onboarding:local-e2e -- --client example --env dev --env-file config/clients/example/dev/.env.mock.example --rebuild
+```
+
 Validation behavior for unknown integrations:
 
 - `dev`: unknown provider/channel/extension values warn
@@ -295,6 +345,7 @@ Yes, but keep it thin and internal first.
 ## Pre-build checklist
 
 - Upstream sync completed and rebased cleanly
+- `pnpm client:host:check` passes on target machine
 - `pnpm check` passes
 - A scoped onboarding validation test passes
 - Client payload schema version pinned

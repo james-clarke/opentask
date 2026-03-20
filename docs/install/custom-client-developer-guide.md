@@ -119,6 +119,7 @@ Key behavior:
 - Compose project name is deterministic: `openclaw-<client>-<env>`
 - Client state directories are deterministic under `~/.openclaw-clients/<client>/<env>/`
 - Secret values are resolved from process env first, then `--env-file`
+- Apply flow bootstraps `gateway.mode=local` and `gateway.bind` into client config for first-run containers
 
 ## Verification checks (Phase 7)
 
@@ -144,6 +145,59 @@ Strict mode fails on warnings:
 ```bash
 pnpm client:verify -- --client example --env dev --env-file config/clients/example/dev/.env.mock.example --strict
 ```
+
+## Simulation workflow (Phase 8)
+
+Simulation script:
+
+- `scripts/client-simulate.mjs`
+
+Profiles:
+
+- `quick`: deploy dry-run + verify (no container apply)
+- `full`: pre-clean existing compose project, deploy apply + verify, then gateway health probe from inside `openclaw-gateway`, and optional teardown
+
+Commands:
+
+```bash
+pnpm client:simulate -- --client example --env dev --profile quick --env-file config/clients/example/dev/.env.mock.example
+pnpm client:simulate -- --client example --env dev --profile full --env-file config/clients/example/dev/.env.mock.example --teardown
+```
+
+When debugging, use `--keep-going` to run all remaining steps even after a failure.
+
+## Local onboarding E2E runner
+
+End-to-end script:
+
+- `scripts/client-onboarding-local-e2e.mjs`
+
+Purpose:
+
+- run host preflight checks
+- optionally rebuild Docker image (`--rebuild`)
+- run full simulation profile (apply + verify + default teardown)
+
+Defaults:
+
+- no rebuild unless `--rebuild`
+- teardown is on by default (set `--keep-running` to keep stack active)
+
+Commands:
+
+```bash
+pnpm client:onboarding:local-e2e -- --client example --env dev --env-file config/clients/example/dev/.env.mock.example
+pnpm client:onboarding:local-e2e -- --client example --env dev --env-file config/clients/example/dev/.env.mock.example --rebuild --keep-running
+```
+
+Host dependency preflight command:
+
+```bash
+pnpm client:host:check
+```
+
+Host preflight also verifies Docker daemon access (not just binary presence).
+If `openclaw:local` is missing, run local E2E with `--rebuild` once.
 
 ## Internal onboarding web app
 
@@ -222,6 +276,8 @@ Makefile wrappers:
 make deploy-dry-run CLIENT=example ENV=dev ENV_FILE=config/clients/example/dev/.env.mock.example
 make deploy CLIENT=example ENV=dev ENV_FILE=config/clients/example/dev/.env.mock.example
 make client-verify CLIENT=example ENV=dev ENV_FILE=config/clients/example/dev/.env.mock.example
+make client-simulate CLIENT=example ENV=dev PROFILE=quick ENV_FILE=config/clients/example/dev/.env.mock.example
+make client-local-e2e CLIENT=example ENV=dev ENV_FILE=config/clients/example/dev/.env.mock.example
 ```
 
 ## CI workflow

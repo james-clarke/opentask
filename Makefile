@@ -5,8 +5,12 @@ ENV ?=
 PAYLOAD ?=config/payloads
 MANIFEST ?=
 ENV_FILE ?=
+PROFILE ?=quick
+TEARDOWN ?=0
+REBUILD ?=0
+KEEP_RUNNING ?=0
 
-.PHONY: client-catalog client-catalog-check client-validate client-validate-strict client-import client-mock-env client-verify deploy-dry-run deploy
+.PHONY: client-catalog client-catalog-check client-validate client-validate-strict client-import client-mock-env client-verify client-simulate client-host-check client-local-e2e deploy-dry-run deploy
 
 define require_client_env
 	@if [[ -z "$(CLIENT)" || -z "$(ENV)" ]]; then \
@@ -44,6 +48,42 @@ client-verify:
 	else \
 		pnpm client:verify -- --client "$(CLIENT)" --env "$(ENV)"; \
 	fi
+
+client-host-check:
+	bash scripts/client-host-check.sh
+
+client-simulate:
+	$(require_client_env)
+	@if [[ -n "$(ENV_FILE)" ]]; then \
+		EXTRA_ENV_FILE="--env-file $(ENV_FILE)"; \
+	else \
+		EXTRA_ENV_FILE=""; \
+	fi; \
+	if [[ "$(TEARDOWN)" == "1" ]]; then \
+		EXTRA_TEARDOWN="--teardown"; \
+	else \
+		EXTRA_TEARDOWN=""; \
+	fi; \
+	pnpm client:simulate -- --client "$(CLIENT)" --env "$(ENV)" --profile "$(PROFILE)" $$EXTRA_ENV_FILE $$EXTRA_TEARDOWN
+
+client-local-e2e:
+	$(require_client_env)
+	@if [[ -n "$(ENV_FILE)" ]]; then \
+		EXTRA_ENV_FILE="--env-file $(ENV_FILE)"; \
+	else \
+		EXTRA_ENV_FILE=""; \
+	fi; \
+	if [[ "$(REBUILD)" == "1" ]]; then \
+		EXTRA_REBUILD="--rebuild"; \
+	else \
+		EXTRA_REBUILD=""; \
+	fi; \
+	if [[ "$(KEEP_RUNNING)" == "1" ]]; then \
+		EXTRA_KEEP="--keep-running"; \
+	else \
+		EXTRA_KEEP=""; \
+	fi; \
+	pnpm client:onboarding:local-e2e -- --client "$(CLIENT)" --env "$(ENV)" $$EXTRA_ENV_FILE $$EXTRA_REBUILD $$EXTRA_KEEP
 
 deploy-dry-run:
 	$(require_client_env)
